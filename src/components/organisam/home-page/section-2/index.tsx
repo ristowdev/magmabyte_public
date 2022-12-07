@@ -41,11 +41,7 @@ function Section2Edit() {
                         <label className={'input-label '}  style={{marginBottom:'5px'}}>
                             Description
                         </label>
-                        <CustomTextArea 
-                            className='text-area-edit'
-                            placeholder="Based on the requirements defined we will test against the application to discover any discrepancies in any of the functionalities or components."
-                        />
-
+                      
                     </div>
                     <div className='d-ds-dsa'>
                         <div className='dd2ld-dd'>

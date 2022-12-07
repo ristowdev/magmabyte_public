@@ -41,6 +41,11 @@ export default function InputWithMoreDetails2(props: IInputWithMoreDetailsProps)
     };
 
     // alert(value);
+    const getVehiclesErrors = (errors:any) => {
+        return Array.isArray(errors)
+          ? errors.filter((email, i, arr) => arr.indexOf(email) === i)
+          : errors;
+      };
 
     return (
         <ControlInput>
@@ -68,9 +73,11 @@ export default function InputWithMoreDetails2(props: IInputWithMoreDetailsProps)
                             <Input 
                                 type={type} 
                                 {...input} 
+                                name={name}
                                 placeholder={placeholder} 
                                 className={className + ` ${meta.touched && meta.error && 'i-4df-felf'}`}
                             />
+                            {/* <div>{meta.touched && getVehiclesErrors(meta.error)}</div> */}
                         </InputContainer>
                     </div>
                 )}

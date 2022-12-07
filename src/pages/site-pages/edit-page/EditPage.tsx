@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PageContentDefault from '../../../components/atoms/Contents/PageContentDefault';
 import SideBarMainComponent from '../../../components/atoms/CustomComponents/SideBarMainComponent';
@@ -18,17 +18,21 @@ import DefaultMenu from '../../../components/atoms/Menus/DefaultMenu';
 import ErrorMessage from '../../../components/atoms/Snacbars/ErrorMessage';
 import DefaultForm from '../../../components/atoms/Forms/DefaultForm';
 import * as yup from 'yup';
+import LinkButton from '../../../components/atoms/Buttons/LinkButton';
 
 function EditPage() {
     const {
         id = null
     } = useParams(); 
 
+    const _pageStatusRef = useRef<string>("publish")
+
     // get page data
     const { data, isError, isLoading, isSuccess, error } = useSinglePageQuery(id);
     
-
-    const [updatePage, response] = useUpdatePageMutation();
+    const [updatePage,
+        { isLoading: isSubmitting }, // This is the destructured mutation result
+    ] = useUpdatePageMutation();
     
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -40,6 +44,8 @@ function EditPage() {
     const [returnedPageComponents, setReturnedPageComponentsSet] = useState<any>(null);
     const [selectPageVisibility, setSelectPageVisibility] = useState<string>("");
     const [currentComponents, setCurrentComponents] = useState<any>(null);
+    const [selectPageStatus, setSelectPageStatus] = useState<string>("");
+
 
     const handleCreatePage = (e: any, type: string) =>{
         formik.setFieldValue('page_visibility', 
@@ -61,7 +67,7 @@ function EditPage() {
                     page_title:values.page_title,
                     page_status:values.page_status,
                     page_visibility:values.page_visibility,
-                    components:returnedPageComponents
+                    components:returnedPageComponents,
                 }
             ];
 
@@ -94,15 +100,18 @@ function EditPage() {
         Object.assign(values, {
             page_visibility: selectPageVisibility.toLowerCase(),
             components:returnedPageComponents,
-            current_components:currentComponents
+            current_components:currentComponents,
+            page_id:id,
+            page_status:selectPageStatus.toLowerCase(),
         });
         console.log(values);
         updatePage(values).unwrap()
-            .then(() => {
-                // navigate(`/page/${data.page_id}`);
-            })
-            .then((error) => {
-            }); 
+        .then(() => {
+            // navigate(`/page/${data.page_id}`);
+            
+        })
+        .then((error) => {
+        }); 
     }
 
     const initialValues = useMemo(() => {
@@ -117,10 +126,17 @@ function EditPage() {
 
     useEffect(()=>{
         if(data){
-            setSelectPageVisibility(data?.page_status);
+            setSelectPageStatus(data?.page_status);
+            setSelectPageVisibility(data?.page_visibility);
             setCurrentComponents(data?.components);
         }
     },[data]);
+
+    const handleArchivePage = (e: any) => {
+        e.preventDefault();
+        
+        
+    }
 
     return (
        <>   
@@ -169,7 +185,16 @@ function EditPage() {
                                                         size={17}
                                                         color="#c9c9c9"
                                                     />
-                                                    <DetailText>Status: <span style={{color:'black'}}><b>{data.page_status === 'publish' ? 'Published' : 'Draft'}</b></span></DetailText>
+                                                    <DefaultMenu
+                                                        options={
+                                                            // ['Draft', 'Published', 'Archived']
+                                                            ['Published', 'Archived']
+                                                        }
+                                                        label="Status: "
+                                                        defaultSelected={`${data.page_status === 'published' ? 'Published' : data.page_status === 'archived' ? 'Archived' : 'Draft'}`}
+                                                        selectPageVisibility={setSelectPageStatus}
+                                                    />
+                                                    {/* <DetailText>Status: <span style={{color:'black'}}><b>{data.page_status === 'publish' ? 'Published' : data.page_status === 'archive' ? 'Archived' : 'Draft'}</b></span></DetailText> */}
                                                 </Detail>
                                                 <Detail>
                                                     <FaEye 
@@ -191,22 +216,21 @@ function EditPage() {
                                         </Container>
 
                                         <ActionButtons> 
-                                            <SuccessButton 
-                                                label='Back'
+                                            <LinkButton
+                                                buttonText='Back'
                                                 className='sd-ff34xd2'
-                                                type="submit"
-                                                onClick={(e)=>{
-                                                    handleCreatePage(e, 'draft')
-                                                }}
+                                                linkTo={`/pages/`}
                                             />
                                             <SuccessButton 
                                                 label='Save'
                                                 className='sd-ff34xd3'
                                                 onClick={(e)=>{
-                                                    handleCreatePage(e, 'publish')
+                                                    // handleCreatePage(e, 'publish')
+                                                    // _pageStatusRef.current = 'publish'
+
                                                 }}
                                                 type="submit"
-                                                loading={loading}
+                                                loading={isSubmitting}
                                             />
                                         </ActionButtons>
                                     </PublishPageContent>

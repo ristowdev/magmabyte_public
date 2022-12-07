@@ -20,6 +20,7 @@ import { IoIosArrowDown } from 'react-icons/io';
 import {MdOutlinePages} from 'react-icons/md';
 import {TfiWrite} from 'react-icons/tfi';
 import { Link } from "react-router-dom";
+import {FaWpforms} from "react-icons/fa";
 
 
 interface ISidebarProps {}
@@ -95,6 +96,78 @@ const Sidebar = ({}: ISidebarProps) => {
                             <Link to='/pages' style={{textDecoration:'none'}}>
                                 <SubListItem>
                                     <SubListItemText>All pages</SubListItemText>
+                                </SubListItem>
+                            </Link>
+                        </SubList>
+                    </ListItemAndSubItems>
+
+
+                    <ListItemAndSubItems>
+                        <ListItem>
+                            <TfiWrite 
+                                color="#ced4da" 
+                                className="icon-db" 
+                                size={18}
+                                style={{
+                                    marginRight:'10px'
+                                }}
+                            />
+                            <ListItemText>Blog</ListItemText>
+                            <IoIosArrowDown 
+                                color="#ced4da" 
+                                size={15}
+                                style={{
+                                    rotate:'0deg'
+                                }}
+                            />
+                        </ListItem>
+                        <SubList> 
+                            <Link to='/blog/articles/create' style={{textDecoration:'none'}}>
+                                <SubListItem>
+                                    <SubListItemText>Create new article</SubListItemText>
+                                </SubListItem>
+                            </Link>
+                        </SubList>
+                        <SubList> 
+                            <Link to='/blog/articles' style={{textDecoration:'none'}}>
+                                <SubListItem>
+                                    <SubListItemText>All articles</SubListItemText>
+                                </SubListItem>
+                            </Link>
+                        </SubList>
+                    </ListItemAndSubItems>
+
+
+                    <ListItemAndSubItems>
+                        <ListItem>
+                            <FaWpforms 
+                                color="#ced4da" 
+                                className="icon-db" 
+                                size={18}
+                                style={{
+                                    marginRight:'10px'
+                                }}
+                            />
+                            <ListItemText>Forms</ListItemText>
+                            <IoIosArrowDown 
+                                color="#ced4da" 
+                                size={15}
+                                style={{
+                                    rotate:'0deg'
+                                }}
+                            />
+                        </ListItem>
+                        <SubList> 
+                            <Link to='/blog/articles/create' style={{textDecoration:'none'}}>
+                                <SubListItem>
+                                    <SubListItemText>Create new form</SubListItemText>
+                                </SubListItem>
+                            </Link>
+                        </SubList>
+                        <SubList> 
+                            <Link to='/blog/articles' style={{textDecoration:'none'}}>
+                                <SubListItem>
+                                    <SubListItemText>All forms</SubListItemText>
                                 </SubListItem>
                             </Link>
                         </SubList>

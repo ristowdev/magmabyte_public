@@ -22,6 +22,12 @@ const defaultComponents: readonly any[] = [
     },{
         name:'Add items and header',
         key:'addItemsAndHeader'
+    },{
+        name:'List of logos and center text',
+        key:'listOfLogosAndTextCenter'
+    },{
+        name:'List of items with box and center text',
+        key:'listOfItemsInBoxAndCenterText'
     }
 ];
 

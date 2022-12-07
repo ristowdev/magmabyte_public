@@ -42,9 +42,9 @@
 //         formik.setFieldValue('page_status', type);
 //         formik.handleSubmit();
 //     }
-
+    
 //     const validationSchema = Yup.object().shape({
-//         page_title: Yup.string().required("Required"), 
+//         page_title: Yup.string().required("Required"),
 //     });
     
 //     const handleFormSubmit = (values: any) => {
@@ -211,7 +211,10 @@ function CreateNewPagePage() {
 
     const _pageStatusRef = useRef<string>("publish")
 
-    const [addNewPage, response] = useAddNewPageMutation();
+    const [addNewPage,
+        { isLoading: isSubmitting }, // This is the destructured mutation result
+    ] = useAddNewPageMutation();
+    
     
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -368,6 +371,7 @@ function CreateNewPagePage() {
                                                         _pageStatusRef.current = 'draft'
                                                         // handleCreatePage(e, 'draft')
                                                     }}
+                                                    // loading={isSubmitting}
                                                 />
                                                 <SuccessButton
                                                     label='Publish'
@@ -376,7 +380,7 @@ function CreateNewPagePage() {
                                                         _pageStatusRef.current = 'publish'
                                                     }}
                                                     type="submit"
-                                                    loading={loading}
+                                                    loading={isSubmitting}
                                                 />
                                             </ActionButtons>
                                         </PublishPageContent>

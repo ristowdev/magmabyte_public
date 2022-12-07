@@ -11,6 +11,7 @@ import CreateNewPagePage from './pages/site-pages/create-page/CreatePage';
 import EditPageComponent from './pages/site-pages/edit-page-component/EditPageComponent';
 import AllPages from './pages/site-pages';
 import EditPage from './pages/site-pages/edit-page/EditPage';
+import CreateArticlePage from './pages/site-pages/blog/create';
 // import Sidebar from './components/organisam/common/SideBar';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
               <Route path="/page/:pageid/component/:componentid" element={<EditPageComponent />} />
               <Route path="/pages" element={<AllPages />} />
               <Route path="/page/:id" element={<EditPage />} />
+              <Route path="/blog/articles/create" element={<CreateArticlePage />} />
 
             </Routes>
          </BrowserRouter>

@@ -41,11 +41,7 @@ function Section4Edit() {
                         <label className={'input-label '}  style={{marginBottom:'5px'}}>
                             Description
                         </label>
-                        <CustomTextArea 
-                            className='text-area-edit'
-                            placeholder="We begin by analysing the project and diving into the requirements as well as the current implementation of the Software development lifecycle on the project."
-                        />
-
+                      
                     </div>
                     <div className='d-ds-dsa'>
                         <div className='dd2ld-dd'>
