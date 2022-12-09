@@ -9,13 +9,14 @@ interface IDefaultModalProps {
     onCloseModal: (active: boolean, reason?: 'backdropClick' | 'escapeKeyDown') => void;
     headerText: string;
     setChoosedComponent: Dispatch<SetStateAction<any>>;
+    template?: string;
 }
 
 type Dispatch<A> = (value: A) => void;
 
 type DeepWriteable<T> = { -readonly [P in keyof T]: DeepWriteable<T[P]> };
 
-const defaultComponents: readonly any[] = [
+const tempalte_1_components: readonly any[] = [
     {
         name:'Left texts with right image',
         key:'leftTextsRightImage'
@@ -28,6 +29,20 @@ const defaultComponents: readonly any[] = [
     },{
         name:'List of items with box and center text',
         key:'listOfItemsInBoxAndCenterText'
+    },{
+        name:'3 top articles',
+        key:'threeTopArticles'
+    },{
+        name:'Get in touch form',
+        key:'getInTouchForm'
+    }
+];
+
+
+const tempalte_2_components: readonly any[] = [
+    {
+        name:'Long text area',
+        key:'longTextArea'
     }
 ];
 
@@ -37,15 +52,16 @@ export default function DefaultModal(props: IDefaultModalProps) {
         open,
         onCloseModal,
         headerText, 
-        setChoosedComponent
+        setChoosedComponent,
+        template
     } = props;
 
     const handleChoosedComponent = (e: any, component: any) => {
         e.preventDefault();
         onCloseModal(false);
         setChoosedComponent(component);
-    }
-    
+    } 
+
     return (
         <>
             {open && 
@@ -70,7 +86,16 @@ export default function DefaultModal(props: IDefaultModalProps) {
                         <ModalContent>
                             <Container>
                                 <PageComponentsList>
-                                    {defaultComponents.map((_component)=>(
+
+                                    {template === 'Home page' && tempalte_1_components.map((_component)=>(
+                                        <>
+                                            <SingleComponentList onClick={(e) => {handleChoosedComponent(e, _component)}}>
+                                                <ComponentName>{_component.name}</ComponentName>
+                                            </SingleComponentList>
+                                        </>
+                                    ))}
+
+                                    {template === 'Blog post' && tempalte_2_components.map((_component)=>(
                                         <>
                                             <SingleComponentList onClick={(e) => {handleChoosedComponent(e, _component)}}>
                                                 <ComponentName>{_component.name}</ComponentName>

@@ -25,6 +25,7 @@ import { array, boolean, number, object, string, ValidationError } from 'yup';
 import InputWithMoreDetails2 from '../../../components/atoms/Inputs/InputWithMoreDetails2';
 import ErrorMessage from '../../../components/atoms/Snacbars/ErrorMessage';
 import ListOfItemsInBoxAndCenterText from '../../../components/molecules/page-components/ListOfItemsInBoxAndCenterText';
+import GetInTouchForm from '../../../components/molecules/page-components/GetInTouchForm';
 
 interface IEditPageComponentProps {
 }
@@ -76,7 +77,20 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
 
         if(data?.component_key === 'listOfItemsInBoxAndCenterText'){
             return {
-                main_text_center:data?.items[0]?.addItemsAndHeader?.main_text_center
+                main_text_center:data?.items[0]?.listOfItemsInBoxAndCenterText?.main_text_center
+            };
+        };
+
+
+        if(data?.component_key === 'getInTouchForm'){
+            return {
+                main_text_left:data?.items[0]?.getInTouchForm[0]?.main_text_left,
+                button_text:data?.items[0]?.getInTouchForm[0]?.button_text,
+                email:data?.items[0]?.getInTouchForm[0]?.email,
+                phone_number:data?.items[0]?.getInTouchForm[0]?.phone_number,
+                address:data?.items[0]?.getInTouchForm[0]?.address,
+                right_location_text:data?.items[0]?.getInTouchForm[0]?.right_location_text,
+                right_sub_location_text:data?.items[0]?.getInTouchForm[0]?.right_sub_location_text,
             };
         };
     },[data]);
@@ -107,6 +121,20 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
             return (
                 yup.object({
                     main_text_center: yup.string().required('required'),
+                })
+            );
+        }; 
+
+        if(data?.component_key === 'getInTouchForm'){
+            return (
+                yup.object({
+                    main_text_left: yup.string().required('required'),
+                    right_location_text: yup.string().required('required'),
+                    right_sub_location_text: yup.string().required('required'),
+                    address: yup.string().required('required'),
+                    email: yup.string().required('required'),
+                    phone_number: yup.string().required('required'),
+                    button_text: yup.string().required('required'),
                 })
             );
         }; 
@@ -236,6 +264,20 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
             .then((error) => {
             }); 
         }
+
+        if(data?.component_key === 'getInTouchForm'){
+            Object.assign(values, {
+                page_id: pageid,
+                component_id: componentid,
+                component_key: data.component_key
+            });
+            addNewItemsToComponent(values).unwrap()
+            .then(() => {
+                navigate(`/page/${data.page_id}`);
+            })
+            .then((error) => {
+            }); 
+        }
     }
         
 
@@ -279,15 +321,15 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                                                 data={data.items[0]}
                                                 setListOfItemsInBoxAndCenterText={setListOfItemsInBoxAndCenterText}
                                             />
-                                        } 
+                                        }
 
-{/* <InputWithMoreDetails2
-                                                                            name={`items.0.maintextleft2`}
-                                                                            labelText="Main text center"
-                                                                            placeholder='Some of the testing we offer'
-                                                                            className='edit-input'
-                                                                            type='text'
-                                                                        />  */}
+                                        {data?.component_key === 'getInTouchForm' && 
+                                            <GetInTouchForm
+                                                // formik={_formik && _formik}
+                                                data={data.items[0]}
+                                            />
+                                        }
+
                                     </>
                                 }
                                 rightElements={

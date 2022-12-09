@@ -16,8 +16,7 @@ const DefaultTextEditor = ({
     onEditorChange,
     label,
     initialValue,
-    locale = 'mk_MK',
-    height = 300,
+    height = 600,
     error,
     value,
 }: IDefaultTextEditor) => {
@@ -36,9 +35,9 @@ const DefaultTextEditor = ({
                     height,
                     menubar: true,
                     plugins: [
-                        'advlist autolink lists link media image charmap print preview anchor',
-                        'searchreplace visualblocks code fullscreen',
-                        'insertdatetime media table paste code help wordcount',
+                        // 'advlist autolink lists link media image charmap print preview anchor',
+                        // 'searchreplace visualblocks code fullscreen',
+                        // 'insertdatetime media table paste code help wordcount',
                     ],
                     toolbar:
                         'undo redo | formatselect | ' +
@@ -46,9 +45,7 @@ const DefaultTextEditor = ({
                         'alignright alignjustify | bullist numlist outdent indent | ' +
                         'removeformat | help',
                     content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                    branding: false,
-                    language: locale,
-                    language_url: '/langs/mk_MK.js',
+                    branding: false, 
                 }}
                 onEditorChange={onEditorChange}
             />

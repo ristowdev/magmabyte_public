@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ag-grid-community/all-modules": "^27.3.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@react-page/editor": "^5.2.0",
@@ -22,6 +23,7 @@
     "@types/styled-components": "^5.1.26",
     "@types/tinymce": "^4.6.5",
     "ag-grid": "^18.1.2",
+    "ag-grid-react": "^28.2.1",
     "final-form": "^4.20.7",
     "formik": "^2.2.9",
     "mui-rff": "^6.1.2",

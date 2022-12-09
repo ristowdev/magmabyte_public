@@ -27,6 +27,8 @@ function EditPage() {
 
     const _pageStatusRef = useRef<string>("publish")
 
+    const [selectPageTemplate, setSelectPageTemplate] = useState<string>("");
+
     // get page data
     const { data, isError, isLoading, isSuccess, error } = useSinglePageQuery(id);
     
@@ -61,7 +63,8 @@ function EditPage() {
     
     const handleFormSubmit = (values: any) => {
          
-        if(returnedPageComponents?.length > 0){
+        // if(returnedPageComponents.length > 0){
+        if(returnedPageComponents.length > 0){
 		    const _arr = [
                 {
                     page_title:values.page_title,
@@ -97,21 +100,28 @@ function EditPage() {
 
     const handleEditPageComponent = async ({ ...values }) => {
         
-        Object.assign(values, {
-            page_visibility: selectPageVisibility.toLowerCase(),
-            components:returnedPageComponents,
-            current_components:currentComponents,
-            page_id:id,
-            page_status:selectPageStatus.toLowerCase(),
-        });
-        console.log(values);
-        updatePage(values).unwrap()
-        .then(() => {
-            // navigate(`/page/${data.page_id}`);
-            
-        })
-        .then((error) => {
-        }); 
+        if(returnedPageComponents?.length > 0){
+
+            Object.assign(values, {
+                page_visibility: selectPageVisibility.toLowerCase(),
+                components:returnedPageComponents,
+                current_components:currentComponents,
+                page_id:id,
+                page_status:selectPageStatus.toLowerCase(),
+                page_template: selectPageTemplate === 'Home page' ? 'home_page' : 'blog_post' 
+            });
+            console.log(values);
+            updatePage(values).unwrap()
+            .then(() => {
+                // navigate(`/page/${data.page_id}`);
+                
+            })
+            .then((error) => {
+            }); 
+        }else{ 
+            setOpenSnackErrorBar(true);
+            setSnackBarErrorMessage('The page must have at least one component!');
+        }
     }
 
     const initialValues = useMemo(() => {
@@ -129,14 +139,14 @@ function EditPage() {
             setSelectPageStatus(data?.page_status);
             setSelectPageVisibility(data?.page_visibility);
             setCurrentComponents(data?.components);
+            setSelectPageTemplate(data?.page_template === 'home_page' ? 'Home page' : 'Blog post');
         }
     },[data]);
 
     const handleArchivePage = (e: any) => {
         e.preventDefault();
-        
-        
     }
+
 
     return (
        <>   
@@ -166,6 +176,7 @@ function EditPage() {
                                                 formik
                                             }
                                             editData={data}
+                                            template={selectPageTemplate}
                                         />
                                     {/* </MagmabyteForm> */}
                                 </Container>
@@ -173,6 +184,42 @@ function EditPage() {
                         }
                         rightElements={
                             <>
+                                <PublishPageFeild
+                                        style={{
+                                            marginBottom:'15px'
+                                        }}
+                                    >
+                                        <PublishPageHeader>
+                                            <PpText>Template</PpText>
+                                        </PublishPageHeader>
+                                        <PublishPageContent>
+                                            <Container style={{paddingBottom:'0px'}}>
+                                                <Details>
+                                                    <Detail>
+                                                        <FaEye 
+                                                            size={17}
+                                                            color="#c9c9c9"
+                                                        />
+                                                        {/* <DetailText>Visibility: <span style={{color:'black'}}><b>Public</b></span></DetailText> */}
+                                                        <DefaultMenu
+                                                            options={
+                                                                ['Home page', 'Blog post']
+                                                            }
+                                                            label="Template: "
+                                                            // defaultSelected="Home page"
+                                                            defaultSelected={`${data.page_template === 'home_page' ? 'Home page' : 'Blog post'}`}
+
+                                                            selectPageVisibility={setSelectPageTemplate}
+                                                        />
+                                                    </Detail>
+                                                     
+                                                </Details>
+ 
+                                            </Container>
+ 
+                                        </PublishPageContent>
+                                    </PublishPageFeild>
+
                                 <PublishPageFeild>
                                     <PublishPageHeader>
                                         <PpText>Publish</PpText>
@@ -247,7 +294,7 @@ function EditPage() {
                 onClose={setOpenSnackErrorBar}
                 errorMessage={snackBarErrorMessage}
             />
-            </>)}
+            </>)}   
             </DefaultForm>
 
 

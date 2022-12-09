@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import SuccessButton from '../../../components/atoms/Buttons/CustomButtons';
 import PageContentDefault from '../../../components/atoms/Contents/PageContentDefault';
 import SideBarMainComponent from '../../../components/atoms/CustomComponents/SideBarMainComponent';
@@ -7,23 +7,34 @@ import DefaultForm from '../../../components/atoms/Forms/DefaultForm';
 import ErrorMessage from '../../../components/atoms/Snacbars/ErrorMessage';
 import CreateArticle from '../../../components/organisam/article-create';
 import CreateArticleView from '../../../components/organisam/blog-page/create-article';
+
 import Sidebar from "../../../components/organisam/common/SideBar";
 import SidebarAndHeader from '../../../components/templates/HeaderWithSideBar';
 import { Container, Detail, Details, PpText, PublishPageContent, PublishPageFeild, PublishPageHeader } from './styles';
 import * as yup from 'yup';
 import {FaEye} from "react-icons/fa";
 import DefaultMenu from '../../../components/atoms/Menus/DefaultMenu';
-import { useAddNewArticleMutation } from '../../../slices/blog/blogApiSlices';
+import { useAddNewArticleMutation, useSingleArticleQuery, useUpdateArticleMutation } from '../../../slices/blog/blogApiSlices';
+import { useParams } from 'react-router-dom';
+import LinkButton from '../../../components/atoms/Buttons/LinkButton';
 
-function CreateArticlePage() {
-    const [selectPageVisibility, setSelectPageVisibility] = useState<string>("Public");
+
+function EditArticle() {
+
+    const {
+        id = null
+    } = useParams();
+
+    const { data, isError, isLoading, isSuccess, error } = useSingleArticleQuery(id);
+
+    const [selectPageVisibility, setSelectPageVisibility] = useState<string>("Private");
 
     const [articleContent, setArticleContnet] = useState();
-    const _articleStatusRef = useRef<string>("publish")
+    // const _articleStatusRef = useRef<string>("publish")
 
-    const [addNewArticle,
+    const [updateArticle,
         { isLoading: isSubmitting }, // This is the destructured mutation result
-    ] = useAddNewArticleMutation();
+    ] = useUpdateArticleMutation();
 
     //error snack bar
     const [openSnackErrorBar, setOpenSnackErrorBar] = useState<boolean>(false);
@@ -35,10 +46,11 @@ function CreateArticlePage() {
             Object.assign(values, { 
                 article_visibility:selectPageVisibility.toLowerCase(),
                 article_content: articleContent,
-                article_status:_articleStatusRef.current
+                // article_status:_articleStatusRef.current,
+                article_id:data[0]._id
             });
 
-            addNewArticle(values)
+            updateArticle(values)
                 .unwrap()
                 .then(() => {
                 })
@@ -51,10 +63,24 @@ function CreateArticlePage() {
             setSnackBarErrorMessage('The article must have content!');
         }
     }
-
-
     
+    const initialValues = useMemo(() => {
+        // alert(data);
+   
+        if(data){
+            return {
+                article_name:data[0].article_name
+            };
+        };
+    },[data]);
 
+    useEffect(()=>{
+        if(data){
+            setSelectPageVisibility(data[0]?.article_visibility);
+            setArticleContnet(data[0].article_content);
+        }
+    },[data]);
+    
     return (
        <>
             <SidebarAndHeader />
@@ -63,10 +89,16 @@ function CreateArticlePage() {
                 schema={yup.object({
                     article_name: yup.string().required('required'),
                 })}
+                initialValues={initialValues}
                 // ref={_pageStatusRef}
+
+
                 >
+                {isLoading ? (<>loading..</>) : data && (<>
+
+
                 <PageContentDefault
-                    headerTitle={`Create new article`}
+                    headerTitle={`Edit article`}
                 >
                     <>
                         <SideBarMainComponent
@@ -75,6 +107,7 @@ function CreateArticlePage() {
                                     <Container>
                                           <CreateArticle 
                                             setArticleContnet={setArticleContnet}
+                                            editData={data}
                                           />
                                     </Container>
                                 </>
@@ -83,7 +116,7 @@ function CreateArticlePage() {
                                 <>
                                     <PublishPageFeild>
                                         <PublishPageHeader>
-                                            <PpText>Publish</PpText>
+                                            <PpText>Edit</PpText>
                                         </PublishPageHeader>
                                         <PublishPageContent>
                                             <Container style={{paddingBottom:'0px'}}>
@@ -99,7 +132,9 @@ function CreateArticlePage() {
                                                                 ['Public', 'Private']
                                                             }
                                                             label="Visibility: "
-                                                            defaultSelected="Public"
+                                                            // defaultSelected="Public"
+                                                            defaultSelected={`${data[0]?.article_visibility === 'private' ? 'Private' : 'Public'}`}
+
                                                             selectPageVisibility={setSelectPageVisibility}
                                                         />
                                                     </Detail>
@@ -108,22 +143,16 @@ function CreateArticlePage() {
                                             </Container>
 
                                             <ActionButtons> 
-                                                <SuccessButton
-                                                    label='Save draft'
+                                                <LinkButton
+                                                    buttonText='Back'
                                                     className='sd-ff34xd2'
-                                                    type="submit"
-                                                    name="save_draft"
-                                                    onClick={(e)=>{
-                                                        _articleStatusRef.current = 'draft';
-                                                        // handleCreatePage(e, 'draft')
-                                                    }}
-                                                    // loading={isSubmitting}
+                                                    linkTo={`/blog/articles/`}
                                                 />
                                                 <SuccessButton
-                                                    label='Publish'
+                                                    label='Save'
                                                     className='sd-ff34xd3'
                                                     onClick={(e)=>{
-                                                        _articleStatusRef.current = 'publish';
+                                                        // _articleStatusRef.current = 'publish';
                                                     }}
                                                     type="submit"
                                                     loading={isSubmitting}
@@ -137,6 +166,7 @@ function CreateArticlePage() {
                         
                     </>
                 </PageContentDefault>
+            </>)}
             </DefaultForm>
 
             <ErrorMessage
@@ -148,5 +178,5 @@ function CreateArticlePage() {
     );
   }
   
-  export default CreateArticlePage;
+  export default EditArticle;
   

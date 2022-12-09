@@ -11,6 +11,11 @@ export const PpText = styled.span`
 export const PublishPageFeild = styled.div`
     display:flex;
     flex-direction:column;
+
+    box-shadow: 0 1px 2px 0 rgb(31 45 61 / 7%);
+    background-color:white;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
 `;
 
 export const PublishPageHeader = styled.div`

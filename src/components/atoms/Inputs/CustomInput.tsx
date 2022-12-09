@@ -34,7 +34,7 @@ export default function CustomInput(props: ICustomInputProps) {
         value,
         error,
         defaultValue
-    } = props;
+    } = props; 
 
     // const [value, setValue] = useState<string>('');
 

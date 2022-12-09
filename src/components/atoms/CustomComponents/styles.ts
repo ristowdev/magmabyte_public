@@ -43,11 +43,11 @@ export const MainLeft = styled.div`
 export const SideBarRight = styled.div`
     width:25%;
     // min-height:300px;
-    box-shadow: 0 1px 2px 0 rgb(31 45 61 / 7%);
-    background-color:white;
+    // box-shadow: 0 1px 2px 0 rgb(31 45 61 / 7%);
+    // background-color:white;
+    // border: 1px solid #dee2e6;
     margin-left:2%;
-    border: 1px solid #dee2e6;
-    border-radius: 0.25rem; 
+    // border-radius: 0.25rem;
     height: fit-content !important;
 `;
 

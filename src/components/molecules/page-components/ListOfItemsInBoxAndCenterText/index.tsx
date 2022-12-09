@@ -106,7 +106,7 @@ export default function ListOfItemsInBoxAndCenterText(props: IListOfItemsInBoxAn
     useEffect(()=>{
         if(data){
             var __initial_items_to_component: any = [];
-            data?.addItemsAndHeader?.items.map((__ck: any, index: number)=>{
+            data?.listOfItemsInBoxAndCenterText?.items.map((__ck: any, index: number)=>{
                 __initial_items_to_component.push({
                     _id:__ck._id,
                     id: randomNumberInRange(1,10000),
@@ -121,7 +121,7 @@ export default function ListOfItemsInBoxAndCenterText(props: IListOfItemsInBoxAn
             // console.log(__initial_components);
         }
         
-    }, [data?.addItemsAndHeader?.items]);
+    }, [data?.listOfItemsInBoxAndCenterText?.items]);
     // console.log(data.addItemsAndHeader);
 
     return (

@@ -3,7 +3,8 @@ import InputWithMoreDetails2 from '../../atoms/Inputs/InputWithMoreDetails2';
 import DefaultTextEditor from '../../atoms/TextEditors/DefaultTextEditor';
  
 interface ICreateArticleProps {
-    
+    setArticleContnet: Dispatch<SetStateAction<any>>;
+    editData?: any;
 }
  
 type Dispatch<A> = (value: A) => void;
@@ -11,7 +12,8 @@ type Dispatch<A> = (value: A) => void;
 export default function CreateArticle(props: ICreateArticleProps) {
     
     const {
-        
+        setArticleContnet,
+        editData
     } = props;
 
  
@@ -30,7 +32,22 @@ export default function CreateArticle(props: ICreateArticleProps) {
                 </label>
             </div>
 
-            <DefaultTextEditor />
+            {/* {editData && 
+                <DefaultTextEditor 
+                    onEditorChange={setArticleContnet}
+                    value={editData&&editData[0].article_content}
+                />
+            }
+
+            {!editData && 
+                <DefaultTextEditor 
+                    onEditorChange={setArticleContnet}
+                />
+            } */}
+            <DefaultTextEditor 
+                onEditorChange={setArticleContnet}
+                initialValue={editData&&editData[0].article_content as string}
+            />
 
             <div style={{marginBottom:'15px'}}></div>
         </>
