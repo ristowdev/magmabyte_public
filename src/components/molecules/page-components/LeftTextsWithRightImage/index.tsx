@@ -1,5 +1,5 @@
 import React from 'react';
-import { InsideEditSection } from './style';
+import { InsideEditSection, UploadFileINput } from './style';
  
 import InputWithMoreDetails from '../../../atoms/Inputs/InputWithMoreDetails';
 import { Form, Field } from 'react-final-form'
@@ -93,12 +93,11 @@ export default function LeftTextsWithRightImage(props: ILeftTextsWithRightImageP
                 name="right_main_image"
             /> */}
 
-            <input
-                type="file"
-                onInput={handleUpload}
+            <DefaultFileUploader 
                 id="right_main_image"
-                accept="image/png, image/gif, image/jpeg"
-                name="media-image" 
+                labelText='Right main image'
+                name='right_main_image'
+                // defaultValue={data?.leftTextsRightImage}
             />
             {/* <DefaultFileUploader 
                 name="right_main_image"

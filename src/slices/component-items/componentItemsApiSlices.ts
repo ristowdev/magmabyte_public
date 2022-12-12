@@ -10,8 +10,7 @@ export const ComponentItemsApiSlices = apiBaseSlice.injectEndpoints({
           method: 'POST',
           body: payload,
           headers: {
-            // 'Content-type': 'multipart/form-data; application/json; charset=UTF-8',
-            'Content-type': 'multipart/form-data; ',
+            'Content-type': 'application/json; charset=UTF-8',
           },
         }),
       }),

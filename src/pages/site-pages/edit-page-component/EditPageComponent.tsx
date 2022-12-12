@@ -51,7 +51,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
     
     const { data, isError, isLoading, isSuccess, error } = useGetSingleComponentQuery([pageid, componentid]);
     const [addNewItemsToComponent,
-        { isLoading: isSubmitting }, // This is the destructured mutation result
+        { isLoading: isSubmitting } // This is the destructured mutation result
     ] = useAddNewItemsToComponentMutation();
 
     const [uploadImage,
@@ -161,13 +161,63 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
             if(addItemsAndHeaderItems?.length>0){
 
                 let __component_items = [];
+                // await Promise.all(
+                //     addItemsAndHeaderItems.map((item, index)=>{
+                //         var element = document.querySelector("input[name='items."+index+".main_text']");
+                //         var _element = document.querySelector("textarea[name='items."+index+".description']");
+                //         var __element = document.querySelector("input[name='items."+index+".icon']");
+                //         const main_text = (element as HTMLInputElement).value;
+                //         const description = (_element as HTMLInputElement).value;
+                //         const icon = (__element as HTMLInputElement);
+                //         const sort_number = addItemsAndHeaderItems[index]['sortNumber'];
+                //         const payload = new FormData();
+
+                //         if(main_text.length<1){
+                //             setOpenSnackErrorBar(true);
+                //             setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have main text add it or remove the item.`);
+                //             return 0;
+                //         }
+    
+                //         if(description.length<1){
+                //             setOpenSnackErrorBar(true);
+                //             setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have description add it or remove the item.`);
+                //             return 0;
+                //         }
+ 
+                //         if(icon.files && icon.files.length > 0){
+                //             payload.append("file", icon.files[0]); 
+                //             uploadImage(payload)
+                //             .then((res: any) => {
+                //                 // console.log(res.data.file_name);
+                //                 const image = res.data.file_name;
+                //                 __component_items.push({
+                //                     main_text:main_text,
+                //                     description:description,
+                //                     sort_number:sort_number,
+                //                     icon: image
+                //                 });
+                //                 // navigate(`/page/${data.page_id}`);
+                //             })
+                //             .then((error) => {
+                //             });
+                //         }
+
+                //         console.log(__component_items);
+    
+                        
+                //     })
+                // );
+
                 for(let i=0; i<addItemsAndHeaderItems.length; i++){
                     var element = document.querySelector("input[name='items."+i+".main_text']");
                     var _element = document.querySelector("textarea[name='items."+i+".description']");
+                    var __element = document.querySelector("input[name='items."+i+".icon_name']");
                     const main_text = (element as HTMLInputElement).value;
                     const description = (_element as HTMLInputElement).value;
+                    const icon = (__element as HTMLInputElement).value;
                     const sort_number = addItemsAndHeaderItems[i]['sortNumber'];
-    
+                    const payload = new FormData();
+                    var im: string = '';
                     if(main_text.length<1){
                         setOpenSnackErrorBar(true);
                         setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have main text add it or remove the item.`);
@@ -178,13 +228,32 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                         setOpenSnackErrorBar(true);
                         setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have description add it or remove the item.`);
                         return 0;
-                    }
+                    } 
+                    // if(icon.files && icon.files.length > 0){
+                    //     payload.append("file", icon.files[0]); 
+                    //     uploadImage(payload)
+                    //     .then((res: any) => {
+                    //         // console.log(res.data.file_name);
+                    //         const image = res.data.file_name;
+                    //         im = image;
+                    //         // navigate(`/page/${data.page_id}`);
+                    //     })
+                    //     .then((error) => {
+                    //     });
+                    // }
 
                     __component_items.push({
                         main_text:main_text,
                         description:description,
-                        sort_number:sort_number
+                        sort_number:sort_number,
+                        icon: icon
                     });
+
+                    // __component_items.push({
+                    //     main_text:main_text,
+                    //     description:description,
+                    //     sort_number:sort_number
+                    // });
                 }
 
                 Object.assign(values, {
@@ -202,7 +271,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
 
             addNewItemsToComponent(values).unwrap()
             .then(() => {
-                navigate(`/page/${data.page_id}`);
+                // navigate(`/page/${data.page_id}`);
             })
             .then((error) => {
             }); 
@@ -264,25 +333,127 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
 
             
             const element = document.getElementById('right_main_image') as HTMLInputElement;
-            // alert("hi")
             const payload = new FormData();
-            if(element.files){  
-                payload.append("file", element.files[0]); 
+
+            // check if the component has an image
+            if(data?.items[0]?.leftTextsRightImage[0]?.right_main_image===undefined){ // if not
+                // check if image is uploaded
+                if(element.files && element.files.length > 0){
+                    payload.append("file", element.files[0]); 
+                    uploadImage(payload)
+                    .then((res: any) => {
+                        // console.log(res.data.file_name);
+                        const image = res.data.file_name;
+                        Object.assign(values, {
+                            page_id: pageid,
+                            component_id: componentid,
+                            component_key: data.component_key,
+                            right_main_image: image
+                        });
+
+                        addNewItemsToComponent(values).unwrap()
+                        .then(() => {
+                            // navigate(`/page/${data.page_id}`);
+                        })
+                        .then((error) => {
+                        }); 
+                        // navigate(`/page/${data.page_id}`);
+                    })
+                    .then((error) => {
+                    });
+                }else{ // handle error for right main image
+                    setOpenSnackErrorBar(true);
+                    setSnackBarErrorMessage('The component must have right main image. Upload an image!');
+                }
+            }else{ // update exist image, texts etc..
+                
+                // check if new image is uploaded
+                if(element.files && element.files.length > 0){
+                    payload.append("file", element.files[0]); 
+                    uploadImage(payload)
+                    .then((res: any) => {
+                        // console.log(res.data.file_name);
+                        const image = res.data.file_name;
+                        Object.assign(values, {
+                            page_id: pageid,
+                            component_id: componentid,
+                            component_key: data.component_key,
+                            right_main_image: image
+                        });
+
+                        addNewItemsToComponent(values).unwrap()
+                        .then(() => {
+                            // navigate(`/page/${data.page_id}`);
+                        })
+                        .then((error) => {
+                        }); 
+                        // navigate(`/page/${data.page_id}`);
+                    })
+                    .then((error) => {
+                    });
+                }else{ // or update just texts .... 
+                    Object.assign(values, {
+                        page_id: pageid,
+                        component_id: componentid,
+                        component_key: data.component_key,
+                        right_main_image: data?.items[0]?.leftTextsRightImage[0]?.right_main_image
+                    });
+
+                    addNewItemsToComponent(values).unwrap()
+                    .then(() => {
+                        // navigate(`/page/${data.page_id}`);
+                    })
+                    .then((error) => {
+                    }); 
+                }
             }
+            // if(element.files){  
+            //     payload.append("file", element.files[0]); 
+            //     uploadImage(payload)
+            //     .then((res: any) => {
+            //         // console.log(res.data.file_name);
+            //         const image = res.data.file_name;
+            //         Object.assign(values, {
+            //             page_id: pageid,
+            //             component_id: componentid,
+            //             component_key: data.component_key,
+            //             right_main_image: image
+            //         });
+
+            //         addNewItemsToComponent(values).unwrap()
+            //         .then(() => {
+            //             // navigate(`/page/${data.page_id}`);
+            //         })
+            //         .then((error) => {
+            //         }); 
+            //         // navigate(`/page/${data.page_id}`);
+            //     })
+            //     .then((error) => {
+            //     });
+            // }else{
+            //     // Object.assign(values, {
+            //     //     page_id: pageid,
+            //     //     component_id: componentid,
+            //     //     component_key: data.component_key,
+            //     //     // right_main_image: data.
+            //     // });
+
+            //     // addNewItemsToComponent(values).unwrap()
+            //     // .then(() => {
+            //     //     // navigate(`/page/${data.page_id}`);
+            //     // })
+            //     // .then((error) => {
+            //     // }); 
+            // }
+
+
+
             // // payload.append("file", values)
 
             // console.log(payload)
-            // Object.assign(values, {
-            //     page_id: pageid,
-            //     component_id: componentid,
-            //     component_key: data.component_key
-            // });
-            uploadImage(payload).unwrap()
-            .then(() => {
-                // navigate(`/page/${data.page_id}`);
-            })
-            .then((error) => {
-            }); 
+    
+
+            
         }
 
         if(data?.component_key === 'getInTouchForm'){

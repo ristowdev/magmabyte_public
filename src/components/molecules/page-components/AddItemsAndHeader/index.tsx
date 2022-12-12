@@ -9,6 +9,8 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import DeleteComponentModal from '../../../organisam/modals/DeleteComponentModal';
 import InputWithMoreDetails2 from '../../../atoms/Inputs/InputWithMoreDetails2';
 import InputWithMoreDetails3 from '../../../atoms/Inputs/InputWithMoreDetails3';
+import DefaultFileUploader from '../../../atoms/FileUploaders/DefaultFileUploader';
+import InstantFileUploader from '../../../atoms/FileUploaders/InstantFileUploader';
 
 interface IAddItemsComponentProps {
      
@@ -240,6 +242,15 @@ export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
                                                                             placeholder="Based on the requirements defined we will test against the application to discover any discrepancies in any of the functionalities or components."
                                                                             defaultValue={component.description}
 
+                                                                        />
+                                                                        
+
+                                                                        <InstantFileUploader
+                                                                            id={`items.${index}.icon`}
+                                                                            labelText='Right main image'
+                                                                            name={`items.${index}.icon`}
+                                                                            __id={index}
+                                                                            // defaultValue={data?.leftTextsRightImage}
                                                                         />
                                                                     </div>
                                                                 {/* </fieldset> */}
