@@ -4,6 +4,9 @@ import { InsideEditSection } from './style';
 import InputWithMoreDetails from '../../../atoms/Inputs/InputWithMoreDetails';
 import { Form, Field } from 'react-final-form'
 import InputWithMoreDetails2 from '../../../atoms/Inputs/InputWithMoreDetails2';
+import FileUploader from '../../../atoms/FileUploaders/DefaultFileUploader';
+import DefaultFileUploader from '../../../atoms/FileUploaders/DefaultFileUploader';
+import FileField from '../../../atoms/FileUploaders/MainFileUploader';
   
 interface ILeftTextsWithRightImageProps {
     data?: any;
@@ -15,8 +18,18 @@ export default function LeftTextsWithRightImage(props: ILeftTextsWithRightImageP
     } = props;
 
     console.log(data);
+
+    const handleUpload = async () => {
+        // const element = document.getElementById('right_main_image') as HTMLInputElement;
+        // console.log(element.files);
+        // if(element.files){
+        //     console.log(element.files[0]);
+        // }
+    };
     return (
       <InsideEditSection>
+            
+            
 
             <InputWithMoreDetails2
                 name="main_text_left"
@@ -25,6 +38,7 @@ export default function LeftTextsWithRightImage(props: ILeftTextsWithRightImageP
                 className='edit-input'
                 type='text'
             />
+
             <InputWithMoreDetails2 
                 name="sub_text_left"
                 labelText="Sub text left"
@@ -74,6 +88,22 @@ export default function LeftTextsWithRightImage(props: ILeftTextsWithRightImageP
                 id="button_text"
                 name="button_text"
             /> 
+
+            {/* <FileField
+                name="right_main_image"
+            /> */}
+
+            <input
+                type="file"
+                onInput={handleUpload}
+                id="right_main_image"
+                accept="image/png, image/gif, image/jpeg"
+                name="media-image" 
+            />
+            {/* <DefaultFileUploader 
+                name="right_main_image"
+                labelText="Right main image"
+            /> */}
       </InsideEditSection>
               
     );

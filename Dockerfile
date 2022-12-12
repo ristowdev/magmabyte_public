@@ -8,4 +8,4 @@ FROM node:10-alpine
 RUN npm i -g serve
 WORKDIR /app
 COPY --from=build /app/build .
-CMD ["serve", "-p", "6000", "-s", "."]
+CMD ["serve", "-p", "7000", "-s", "."]

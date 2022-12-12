@@ -26,6 +26,7 @@ import InputWithMoreDetails2 from '../../../components/atoms/Inputs/InputWithMor
 import ErrorMessage from '../../../components/atoms/Snacbars/ErrorMessage';
 import ListOfItemsInBoxAndCenterText from '../../../components/molecules/page-components/ListOfItemsInBoxAndCenterText';
 import GetInTouchForm from '../../../components/molecules/page-components/GetInTouchForm';
+import { useUploadImageMutation } from '../../../slices/media/mediaApiSlices';
 
 interface IEditPageComponentProps {
 }
@@ -52,6 +53,13 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
     const [addNewItemsToComponent,
         { isLoading: isSubmitting }, // This is the destructured mutation result
     ] = useAddNewItemsToComponentMutation();
+
+    const [uploadImage,
+        { isLoading: isUploadingImage }, // This is the destructured mutation result
+    ] = useUploadImageMutation();
+
+
+    
     
     const initialValues = useMemo(() => {
         // alert(data);
@@ -101,6 +109,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
         if(data?.component_key === 'leftTextsRightImage'){
             return (
                 yup.object({
+                    // right_main_image: yup.string().required('required'),
                     main_text_left: yup.string().required('required'),
                     sub_text_left: yup.string().required('required'),
                     button_text: yup.string().required('required'),
@@ -252,20 +261,32 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
         }
 
         if(data?.component_key === 'leftTextsRightImage'){
-            Object.assign(values, {
-                page_id: pageid,
-                component_id: componentid,
-                component_key: data.component_key
-            });
-            addNewItemsToComponent(values).unwrap()
+
+            
+            const element = document.getElementById('right_main_image') as HTMLInputElement;
+            // alert("hi")
+            const payload = new FormData();
+            if(element.files){  
+                payload.append("file", element.files[0]); 
+            }
+            // // payload.append("file", values)
+
+            // console.log(payload)
+            // Object.assign(values, {
+            //     page_id: pageid,
+            //     component_id: componentid,
+            //     component_key: data.component_key
+            // });
+            uploadImage(payload).unwrap()
             .then(() => {
-                navigate(`/page/${data.page_id}`);
+                // navigate(`/page/${data.page_id}`);
             })
             .then((error) => {
             }); 
         }
 
         if(data?.component_key === 'getInTouchForm'){
+            
             Object.assign(values, {
                 page_id: pageid,
                 component_id: componentid,
