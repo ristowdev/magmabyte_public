@@ -9,13 +9,12 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import DeleteComponentModal from '../../../organisam/modals/DeleteComponentModal';
 import InputWithMoreDetails2 from '../../../atoms/Inputs/InputWithMoreDetails2';
 import InputWithMoreDetails3 from '../../../atoms/Inputs/InputWithMoreDetails3';
-import DefaultFileUploader from '../../../atoms/FileUploaders/DefaultFileUploader';
 import InstantFileUploader from '../../../atoms/FileUploaders/InstantFileUploader';
 
-interface IAddItemsComponentProps {
+interface IListOfLogosAndTextCenterProps {
      
     data:any;
-    setAddItemsAndHeaderItems: Dispatch<SetStateAction<any>>;
+    setListOfItemsInBoxAndCenterText: Dispatch<SetStateAction<any>>;
 }
 
 type Component = {
@@ -26,16 +25,17 @@ type Component = {
     value:string;
     sortNumber?: number;
     icon?: string;
+    link?: string;
     
 };  
 
 type Dispatch<A> = (value: A) => void;
 
 
-export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
+export default function ListOfLogosAndTextCenter(props: IListOfLogosAndTextCenterProps) {
     const { 
         data,
-        setAddItemsAndHeaderItems
+        setListOfItemsInBoxAndCenterText
     } = props;
 
 
@@ -100,23 +100,22 @@ export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
 
     useEffect(()=>{
         if(componentItems.length > 0){ 
-            setAddItemsAndHeaderItems(componentItems);
+            setListOfItemsInBoxAndCenterText(componentItems);
         }else{
-            setAddItemsAndHeaderItems(null);
+            setListOfItemsInBoxAndCenterText(null);
         }
     }, [componentItems]);
     
     useEffect(()=>{
         if(data){
             var __initial_items_to_component: any = [];
-            data?.addItemsAndHeader?.items.map((__ck: any, index: number)=>{
+            data?.listOfLogosAndTextCenter?.items.map((__ck: any, index: number)=>{
                 __initial_items_to_component.push({
                     _id:__ck._id,
                     id: randomNumberInRange(1,10000),
                     // id: pageComponents.length, 
                     sortNumber: __ck.sort_number,
-                    main_text: __ck.main_text,
-                    description: __ck.description,
+                    link: __ck.link,
                     icon: __ck.icon,
                 });
             });
@@ -125,7 +124,7 @@ export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
             // console.log(__initial_components);
         }
         
-    }, [data?.addItemsAndHeader?.items]);
+    }, [data?.listOfLogosAndTextCenter?.items]);
     // console.log(data.addItemsAndHeader);
 
     return (
@@ -134,7 +133,7 @@ export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
                 <InputWithMoreDetails2
                     name="main_text_center"
                     labelText="Main text center"
-                    placeholder='Some of the testing we offer'
+                    placeholder='Proficient in 20+ technologies and tools'
                     className='edit-input'
                     type='text'
                 />
@@ -194,6 +193,7 @@ export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
                                                             key={component.id}
                                                         >
                                                             <div className='f-ps-da'
+                                                            style={{minHeight:'100px'}}
                                                             key={component.id}
                                                             
                                                             >
@@ -213,18 +213,13 @@ export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
                                                                             >Position: <b>#{component.sortNumber}</b></span>
 
                                                                         </div>
-                                                                        {/* <InputWithMoreDetails
-                                                                            labelText={`Text`}
-                                                                            placeholder='Functional testing'
-                                                                            className='edit-input'
-                                                                        /> */}
                                                                         <InputWithMoreDetails
-                                                                            name={`items.${index}.main_text`}
-                                                                            labelText="Main text center"
-                                                                            placeholder='Some of the testing we offer'
+                                                                            name={`items.${index}.link`}
+                                                                            labelText="Link"
+                                                                            placeholder='https://example.com'
                                                                             className='edit-input'
                                                                             type='text'
-                                                                            defaultValue={component.main_text}
+                                                                            defaultValue={component.link}
                                                                             // value={component.value}
                                                                             // handleChange={(e)=>{
                                                                             //     componentItems.map((im, index) => (
@@ -232,19 +227,7 @@ export default function AddItemsAndHeader(props: IAddItemsComponentProps) {
                                                                             //     ));
                                                                             //     setComponentItems(componentItems);
                                                                             // }}
-                                                                        /> 
-
-
-                                                                        <label className={'input-label '}  style={{marginBottom:'5px'}}>
-                                                                            Description
-                                                                        </label>
-                                                                        <CustomTextArea 
-                                                                            className='text-area-edit'
-                                                                            name={`items.${index}.description`}
-                                                                            placeholder="Based on the requirements defined we will test against the application to discover any discrepancies in any of the functionalities or components."
-                                                                            defaultValue={component.description}
-                                                                        />
-                                                                        
+                                                                        />  
 
                                                                         <InstantFileUploader
                                                                             id={`items.${index}.icon`}

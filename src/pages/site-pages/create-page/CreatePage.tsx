@@ -118,7 +118,7 @@ function CreateNewPagePage() {
     } 
     return (
        <>   
-            <SidebarAndHeader />
+            <SidebarAndHeader /> 
             <DefaultForm
                 onSubmit={handleCreateNewPage}
                 schema={yup.object({

@@ -9,6 +9,7 @@ import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautif
 import DeleteComponentModal from '../../../organisam/modals/DeleteComponentModal';
 import InputWithMoreDetails2 from '../../../atoms/Inputs/InputWithMoreDetails2';
 import InputWithMoreDetails3 from '../../../atoms/Inputs/InputWithMoreDetails3';
+import InstantFileUploader from '../../../atoms/FileUploaders/InstantFileUploader';
 
 interface IListOfItemsInBoxAndCenterTextProps {
      
@@ -23,6 +24,7 @@ type Component = {
     description?: string;
     value:string;
     sortNumber?: number;
+    icon?: string;
     
 };  
 
@@ -114,6 +116,7 @@ export default function ListOfItemsInBoxAndCenterText(props: IListOfItemsInBoxAn
                     sortNumber: __ck.sort_number,
                     main_text: __ck.main_text,
                     description: __ck.description,
+                    icon: __ck.icon,
                 });
             });
             __initial_items_to_component.sort((a: any, b: any) => (a.sortNumber > b.sortNumber) ? 1 : -1)
@@ -228,7 +231,7 @@ export default function ListOfItemsInBoxAndCenterText(props: IListOfItemsInBoxAn
                                                                             //     ));
                                                                             //     setComponentItems(componentItems);
                                                                             // }}
-                                                                        /> 
+                                                                        />  
 
 
                                                                         <label className={'input-label '}  style={{marginBottom:'5px'}}>
@@ -239,7 +242,15 @@ export default function ListOfItemsInBoxAndCenterText(props: IListOfItemsInBoxAn
                                                                             name={`items.${index}.description`}
                                                                             placeholder="Based on the requirements defined we will test against the application to discover any discrepancies in any of the functionalities or components."
                                                                             defaultValue={component.description}
+                                                                        />
 
+                                                                        <InstantFileUploader
+                                                                            id={`items.${index}.icon`}
+                                                                            labelText='Right main image'
+                                                                            name={`items.${index}.icon`}
+                                                                            __id={index}
+                                                                            defaultValue={component.icon || ""}
+                                                                            // defaultValue={data?.leftTextsRightImage}
                                                                         />
                                                                     </div>
                                                                 {/* </fieldset> */}

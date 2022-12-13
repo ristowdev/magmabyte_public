@@ -43,6 +43,9 @@ const tempalte_2_components: readonly any[] = [
     {
         name:'Long text area',
         key:'longTextArea'
+    },{
+        name:'Form with custom inputs',
+        key:'formWithCustomInputs'
     }
 ];
 

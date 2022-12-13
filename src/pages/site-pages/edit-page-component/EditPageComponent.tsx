@@ -27,6 +27,8 @@ import ErrorMessage from '../../../components/atoms/Snacbars/ErrorMessage';
 import ListOfItemsInBoxAndCenterText from '../../../components/molecules/page-components/ListOfItemsInBoxAndCenterText';
 import GetInTouchForm from '../../../components/molecules/page-components/GetInTouchForm';
 import { useUploadImageMutation } from '../../../slices/media/mediaApiSlices';
+import ListOfLogosAndTextCenter from '../../../components/molecules/page-components/ListOfLogosAndTextCenter';
+import LongTextArea from '../../../components/molecules/page-components/LongTextArea';
 
 interface IEditPageComponentProps {
 }
@@ -41,6 +43,9 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
     const navigate = useNavigate();
 
 
+    //text editor value for long text area component
+    const [longTextAreaEditorVal, setLongTextAreaEditorVal] = useState<string>('');
+
     //error snack bar
     const [openSnackErrorBar, setOpenSnackErrorBar] = useState<boolean>(false);
     const [snackBarErrorMessage, setSnackBarErrorMessage] = useState<string>('');
@@ -48,6 +53,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
 
     const [addItemsAndHeaderItems, setAddItemsAndHeaderItems] = useState([]);
     const [_listOfItemsInBoxAndCenterText, setListOfItemsInBoxAndCenterText] = useState([]);
+    const [__listOfLogosAndTextCenter, setListOfLogosAndTextCenter] = useState([]);
     
     const { data, isError, isLoading, isSuccess, error } = useGetSingleComponentQuery([pageid, componentid]);
     const [addNewItemsToComponent,
@@ -101,6 +107,18 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                 right_sub_location_text:data?.items[0]?.getInTouchForm[0]?.right_sub_location_text,
             };
         };
+
+        if(data?.component_key === 'listOfLogosAndTextCenter'){
+            return {
+                main_text_center:data?.items[0]?.listOfLogosAndTextCenter?.main_text_center
+            };
+        };
+
+        if(data?.component_key === 'longTextArea'){
+            return {
+                main_text:data?.items[0]?.longTextArea[0]?.main_text
+            };
+        };
     },[data]);
 
     const componentItemsSchema = useMemo(() => {
@@ -148,6 +166,23 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
             );
         }; 
 
+        if(data?.component_key === 'listOfLogosAndTextCenter'){
+            return (
+                yup.object({
+                    main_text_center: yup.string().required('required'),
+                })
+            );
+        }; 
+
+
+        if(data?.component_key === 'longTextArea'){
+            return (
+                yup.object({
+                    main_text: yup.string().required('required'),
+                })
+            );
+        }; 
+        
         
 
     },[data]);
@@ -161,52 +196,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
             if(addItemsAndHeaderItems?.length>0){
 
                 let __component_items = [];
-                // await Promise.all(
-                //     addItemsAndHeaderItems.map((item, index)=>{
-                //         var element = document.querySelector("input[name='items."+index+".main_text']");
-                //         var _element = document.querySelector("textarea[name='items."+index+".description']");
-                //         var __element = document.querySelector("input[name='items."+index+".icon']");
-                //         const main_text = (element as HTMLInputElement).value;
-                //         const description = (_element as HTMLInputElement).value;
-                //         const icon = (__element as HTMLInputElement);
-                //         const sort_number = addItemsAndHeaderItems[index]['sortNumber'];
-                //         const payload = new FormData();
-
-                //         if(main_text.length<1){
-                //             setOpenSnackErrorBar(true);
-                //             setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have main text add it or remove the item.`);
-                //             return 0;
-                //         }
-    
-                //         if(description.length<1){
-                //             setOpenSnackErrorBar(true);
-                //             setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have description add it or remove the item.`);
-                //             return 0;
-                //         }
- 
-                //         if(icon.files && icon.files.length > 0){
-                //             payload.append("file", icon.files[0]); 
-                //             uploadImage(payload)
-                //             .then((res: any) => {
-                //                 // console.log(res.data.file_name);
-                //                 const image = res.data.file_name;
-                //                 __component_items.push({
-                //                     main_text:main_text,
-                //                     description:description,
-                //                     sort_number:sort_number,
-                //                     icon: image
-                //                 });
-                //                 // navigate(`/page/${data.page_id}`);
-                //             })
-                //             .then((error) => {
-                //             });
-                //         }
-
-                //         console.log(__component_items);
-    
-                        
-                //     })
-                // );
+                
 
                 for(let i=0; i<addItemsAndHeaderItems.length; i++){
                     var element = document.querySelector("input[name='items."+i+".main_text']");
@@ -228,7 +218,13 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                         setOpenSnackErrorBar(true);
                         setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have description add it or remove the item.`);
                         return 0;
-                    } 
+                    }  
+                    if(icon.length<1){
+                        setOpenSnackErrorBar(true);
+                        setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have icon upload icon or remove the item.`);
+                        return 0;
+                    }
+
                     // if(icon.files && icon.files.length > 0){
                     //     payload.append("file", icon.files[0]); 
                     //     uploadImage(payload)
@@ -271,7 +267,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
 
             addNewItemsToComponent(values).unwrap()
             .then(() => {
-                // navigate(`/page/${data.page_id}`);
+                navigate(`/page/${data.page_id}`);
             })
             .then((error) => {
             }); 
@@ -285,8 +281,10 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                 for(let i=0; i<_listOfItemsInBoxAndCenterText.length; i++){
                     var element = document.querySelector("input[name='items."+i+".main_text']");
                     var _element = document.querySelector("textarea[name='items."+i+".description']");
+                    var __element = document.querySelector("input[name='items."+i+".icon_name']");
                     const main_text = (element as HTMLInputElement).value;
                     const description = (_element as HTMLInputElement).value;
+                    const icon = (__element as HTMLInputElement).value;
                     const sort_number = _listOfItemsInBoxAndCenterText[i]['sortNumber'];
     
                     if(main_text.length<1){
@@ -301,10 +299,17 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                         return 0;
                     }
 
+                    if(icon.length<1){
+                        setOpenSnackErrorBar(true);
+                        setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have icon upload icon or remove the item.`);
+                        return 0;
+                    }
+
                     __component_items.push({
                         main_text:main_text,
                         description:description,
-                        sort_number:sort_number
+                        sort_number:sort_number,
+                        icon: icon
                     });
                 }
 
@@ -369,9 +374,9 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                 
                 // check if new image is uploaded
                 if(element.files && element.files.length > 0){
-                    payload.append("file", element.files[0]); 
+                    payload.append("file", element.files[0]);
                     uploadImage(payload)
-                    .then((res: any) => {
+                    .then((res: any) => { 
                         // console.log(res.data.file_name);
                         const image = res.data.file_name;
                         Object.assign(values, {
@@ -470,6 +475,173 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
             .then((error) => {
             }); 
         }
+
+
+        if(data?.component_key === 'listOfLogosAndTextCenter'){
+            if(__listOfLogosAndTextCenter?.length>0){
+                let __component_items = [];
+                
+                for(let i=0; i<__listOfLogosAndTextCenter.length; i++){
+                    var __element = document.querySelector("input[name='items."+i+".icon_name']");
+                    const icon = (__element as HTMLInputElement).value;
+                    const sort_number = __listOfLogosAndTextCenter[i]['sortNumber'];
+                    var _element = document.querySelector("input[name='items."+i+".link']");
+                    const link = (_element as HTMLInputElement).value;
+
+                    if(link.length<1){
+                        setOpenSnackErrorBar(true);
+                        setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have link add it or remove the item.`);
+                        return 0;
+                    }
+
+                    if(icon.length<1){
+                        setOpenSnackErrorBar(true);
+                        setSnackBarErrorMessage(`Item with place ${sort_number} dosen't have icon upload icon or remove the item.`);
+                        return 0;
+                    }
+
+                
+                    __component_items.push({ 
+                        link: link,
+                        sort_number:sort_number,
+                        icon: icon
+                    });
+ 
+                }
+
+                Object.assign(values, {
+                    page_id: pageid,
+                    component_id: componentid,
+                    component_key: data.component_key,
+                    component_items:__component_items
+                });
+
+            }else{ 
+                setOpenSnackErrorBar(true);
+                setSnackBarErrorMessage('The component must have at least one item!');
+                return 0;
+            }
+
+            addNewItemsToComponent(values).unwrap()
+            .then(() => {
+                navigate(`/page/${data.page_id}`);
+            })
+            .then((error) => {
+            }); 
+        }
+
+
+        if(data?.component_key === 'longTextArea'){
+            var __element = document.querySelector("input[name='items.0.icon_name']");
+            const thumbnail = (__element as HTMLInputElement).value;
+
+            if(thumbnail.length<1){
+                setOpenSnackErrorBar(true);
+                setSnackBarErrorMessage(`The componet must have thumbnail!`);
+                return 0;
+            }
+
+            if(longTextAreaEditorVal.length<1){
+                setOpenSnackErrorBar(true);
+                setSnackBarErrorMessage(`The componet must have content!`);
+                return 0;
+            }
+
+            Object.assign(values, {
+                page_id: pageid,
+                component_id: componentid,
+                component_key: data.component_key,
+                main_image: thumbnail,
+                page_content: longTextAreaEditorVal
+            });
+            addNewItemsToComponent(values).unwrap()
+            .then(() => {
+                navigate(`/page/${data.page_id}`);
+            })
+            .then((error) => {
+            });  
+            // const element = document.getElementById('main_image') as HTMLInputElement;
+            // const payload = new FormData();
+
+            // console.log(element);
+
+
+            // check if the component has an image
+            // if(data?.items[0]?.longTextArea[0]?.main_image===undefined){ // if not
+            //     // check if image is uploaded
+            //     if(element.files && element.files.length > 0){
+            //         payload.append("file", element.files[0]); 
+            //         uploadImage(payload)
+            //         .then((res: any) => {
+            //             // console.log(res.data.file_name);
+            //             const image = res.data.file_name;
+            //             Object.assign(values, {
+            //                 page_id: pageid,
+            //                 component_id: componentid,
+            //                 component_key: data.component_key,
+            //                 right_main_image: image
+            //             });
+
+            //             addNewItemsToComponent(values).unwrap()
+            //             .then(() => {
+            //                 // navigate(`/page/${data.page_id}`);
+            //             })
+            //             .then((error) => {
+            //             }); 
+            //             // navigate(`/page/${data.page_id}`);
+            //         })
+            //         .then((error) => {
+            //         });
+            //     }else{ // handle error for right main image
+            //         setOpenSnackErrorBar(true);
+            //         setSnackBarErrorMessage('The component must have right main image. Upload an image!');
+            //     }
+            // }else{ // update exist image, texts etc..
+                
+            //     // check if new image is uploaded
+            //     if(element.files && element.files.length > 0){
+            //         payload.append("file", element.files[0]);
+            //         uploadImage(payload)
+            //         .then((res: any) => { 
+            //             // console.log(res.data.file_name);
+            //             const image = res.data.file_name;
+            //             Object.assign(values, {
+            //                 page_id: pageid,
+            //                 component_id: componentid,
+            //                 component_key: data.component_key,
+            //                 main_image: image
+            //             });
+
+            //             addNewItemsToComponent(values).unwrap()
+            //             .then(() => {
+            //                 // navigate(`/page/${data.page_id}`);
+            //             })
+            //             .then((error) => {
+            //             }); 
+            //             // navigate(`/page/${data.page_id}`);
+            //         })
+            //         .then((error) => {
+            //         });
+            //     }else{ // or update just texts .... 
+            //         Object.assign(values, {
+            //             page_id: pageid,
+            //             component_id: componentid,
+            //             component_key: data.component_key,
+            //             main_image: data?.items[0]?.longTextArea[0]?.main_image
+            //         });
+
+            //         addNewItemsToComponent(values).unwrap()
+            //         .then(() => {
+            //             // navigate(`/page/${data.page_id}`);
+            //         })
+            //         .then((error) => {
+            //         }); 
+            //     }
+            // }
+            
+
+            
+        }
     }
         
 
@@ -521,6 +693,32 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                                                 data={data.items[0]}
                                             />
                                         }
+
+                                        {data?.component_key === 'listOfLogosAndTextCenter' && 
+                                            <ListOfLogosAndTextCenter
+                                                // formik={_formik && _formik}
+                                                data={data.items[0]}
+                                                setListOfItemsInBoxAndCenterText={setListOfLogosAndTextCenter}
+                                            />
+                                        }
+
+
+                                        {data?.component_key === 'longTextArea' && 
+                                            <LongTextArea
+                                                // formik={_formik && _formik}
+                                                data={data.items[0]}
+                                                setLongTextAreaEditorVal={setLongTextAreaEditorVal}
+                                                // setListOfItemsInBoxAndCenterText={setListOfLogosAndTextCenter}
+                                            />
+                                        }
+
+                                        {/* {data?.component_key === 'formWithCustomInputs' && 
+                                            <ListOfLogosAndTextCenter
+                                                // formik={_formik && _formik}
+                                                data={data.items[0]}
+                                                setListOfItemsInBoxAndCenterText={setListOfLogosAndTextCenter}
+                                            />
+                                        } */}
 
                                     </>
                                 }

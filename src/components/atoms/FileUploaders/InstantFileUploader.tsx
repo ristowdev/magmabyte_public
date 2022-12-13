@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react'; 
+import React, { useEffect, useMemo, useRef, useState } from 'react'; 
 // import type { InputHTMLAttributes } from "react";
 import { Form, Field } from 'react-final-form'
 import { Input } from './styles';
@@ -12,6 +12,7 @@ interface IFileUploaderProps {
     labelClass?: string;
     id?: string;
     __id: number;
+    defaultValue: string;
 }
   
 export default function InstantFileUploader(props: IFileUploaderProps) {
@@ -21,23 +22,25 @@ export default function InstantFileUploader(props: IFileUploaderProps) {
         labelText,
         labelClass,
         id,
-        __id
+        __id,
+        defaultValue
     } = props; 
-    const inputRef = useRef<string>("")
+    const inputRef = useRef<string>(defaultValue);
 
     const [uploadImage,
         { isLoading: isUploadingImage }, // This is the destructured mutation result
     ] = useUploadImageMutation();
 
+    const [image, setImage] = useState();
+
     const uploadImageInstant = async (_ci: number) => {
         var __element = document.querySelector("input[name='items."+_ci+".icon']");
         var element_name = document.querySelector("input[name='items."+_ci+".icon_name']");
         var icon_name = (element_name as HTMLInputElement);
-        // icon_name.value = "hola"
-
         const icon = (__element as HTMLInputElement);
         const payload = new FormData();
-        if(icon.files && icon.files.length > 0){
+        if(icon.files && icon.files.length > 0){  
+
             payload.append("file", icon.files[0]); 
             uploadImage(payload)
             .then((res: any) => {
@@ -45,14 +48,26 @@ export default function InstantFileUploader(props: IFileUploaderProps) {
                 const image = res.data.file_name;
                 // navigate(`/page/${data.page_id}`);
                 icon_name.value = image;
-                // inputRef.current = image;
+                setImage(image);
+                // console.log(icon_name.value)
+                
+                inputRef.current = image;
             }) 
             .then((error) => {
             });
         }
 
-        console.log(icon_name)
+        // alert(icon_name.value)
     }
+
+    useEffect(()=>{
+        if(image){
+            var element_name = document.querySelector("input[name='items."+__id+".icon_name']");
+            var icon_name = (element_name as HTMLInputElement);
+            icon_name.value = image;
+        }
+    }, [image]);
+ 
     
     return (
         <>  
@@ -78,20 +93,89 @@ export default function InstantFileUploader(props: IFileUploaderProps) {
                             />
                         </div>
                     ) : null}
-                    <input 
-                        type="hidden"
-                        name={`items.${__id}.icon_name`}
-                        id={`items.${__id}.icon_name`}
-                        // defaultValue={inputRef.current}
-                    />
-                    <Input
-                        type="file"
-                        id={id}
-                        accept="image/png, image/gif, image/jpeg"
-                        name={name}
-                        onChange={()=>uploadImageInstant(__id)}
-                        // defaultValue={data?.leftTextsRightImage}
-                    />
+
+                       
+                    
+                    {!image && (
+                            <input 
+                                type="hidden"
+                                name={`items.${__id}.icon_name`}
+                                id={`items.${__id}.icon_name`}
+                                defaultValue={defaultValue}
+                            />
+                        )} 
+                        {image && (
+                            <input 
+                            type="hidden"
+                            name={`items.${__id}.icon_name`}
+                            id={`items.${__id}.icon_name`}
+                            defaultValue={image}
+                        />         
+                        )}
+
+                    <div 
+                        style={{
+                            display:'flex',
+                            alignItems:'center',
+                            width:'100%'
+                        }}
+                    >
+                        {!image && defaultValue && (
+                            <img 
+                                src={`http://localhost:8080/api/image/${defaultValue}`} 
+                                style={{
+                                    width:'40px',
+                                    height:'40px', 
+                                    objectFit:'contain',
+                                    marginRight:'10px',
+                                    borderRadius:'5px'
+                                }}
+                            />
+                        )}
+                        {image && (
+                            <img 
+                                src={`http://localhost:8080/api/image/${image}`} 
+                                style={{
+                                    width:'40px',
+                                    height:'40px', 
+                                    objectFit:'contain',
+                                    marginRight:'10px',
+                                    borderRadius:'5px'
+                                }}
+                            />
+                        )}
+                        <Input
+                            type="file"
+                            id={id}
+                            accept="image/png, image/gif, image/jpeg"
+                            name={name}
+                            onChange={()=>uploadImageInstant(__id)}
+                            style={{
+                                backgroundColor:'white',
+                                width:'100%'
+                            }}
+                            // defaultValue={data?.leftTextsRightImage}
+                        />
+                    </div>
+
+                    
+                    {isUploadingImage && (
+                        <div
+                            style={{
+
+                                marginTop:'10px',
+                            }}
+                        >
+                            <span 
+                                style={{
+                                    fontSize:'13px',
+                                    color:'#2196f3',
+                                }}
+                            >
+                                Uploading... Please wait before save changes!
+                            </span>
+                        </div>
+                    )}
                     </div>
                 )}
             </Field>
