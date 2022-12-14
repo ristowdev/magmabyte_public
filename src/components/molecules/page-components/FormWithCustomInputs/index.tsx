@@ -47,6 +47,8 @@ type Component = {
     link?: string;
     field_label?: string;
     field_required?: boolean;
+    field_placeholder?: string;
+    field_type?: string;
 };  
 
 type Dispatch<A> = (value: A) => void;
@@ -138,6 +140,7 @@ export default function FormWithCustomInputs(props: IFormWithCustomInputsProps) 
                     field_label: __ck.field_label,
                     field_type: __ck.field_type,
                     field_required: __ck.field_required,
+                    field_placeholder: __ck.field_placeholder,
                 });
             });
             __initial_items_to_component.sort((a: any, b: any) => (a.sortNumber > b.sortNumber) ? 1 : -1)
@@ -155,6 +158,14 @@ export default function FormWithCustomInputs(props: IFormWithCustomInputsProps) 
                     name="form_title"
                     labelText="Form title"
                     placeholder='Request code review ...'
+                    className='edit-input'
+                    type='text'
+                />
+
+                <InputWithMoreDetails2
+                    name="call_to_action"
+                    labelText="Call to action button"
+                    placeholder='Request now'
                     className='edit-input'
                     type='text'
                 />
@@ -234,26 +245,31 @@ export default function FormWithCustomInputs(props: IFormWithCustomInputsProps) 
                                                                             >Position: <b>#{component.sortNumber}</b></span>
 
                                                                         </div>
+
                                                                         <InputWithMoreDetails
                                                                             name={`items.${index}.field_label`}
                                                                             labelText="Field label"
                                                                             placeholder='Full name / E-mail / Phone Number ...'
                                                                             className='edit-input'
                                                                             type='text'
-                                                                            defaultValue={component.field_label}
-                                                                            // value={component.value}
-                                                                            // handleChange={(e)=>{
-                                                                            //     componentItems.map((im, index) => (
-                                                                            //         im.value = (e.target as HTMLInputElement).value
-                                                                            //     ));
-                                                                            //     setComponentItems(componentItems);
-                                                                            // }}
-                                                                        />  
+                                                                            defaultValue={component.field_label} 
+                                                                        />
+
+                                                                        <InputWithMoreDetails
+                                                                            name={`items.${index}.field_placeholder`}
+                                                                            labelText="Field placeholder"
+                                                                            placeholder='Enter your name here.'
+                                                                            className='edit-input'
+                                                                            type='text'
+                                                                            defaultValue={component.field_placeholder} 
+                                                                        />
+
                                                                         <CustomeSelectMenu 
                                                                             labelText='Field type'
                                                                             options={fieldTypes}
                                                                             name={`items.${index}.field_type`}
                                                                             className="ds--dlsl-pll"
+                                                                            defaultValue={component.field_type}
                                                                         />
 
                                                                         <DefaultCheckBox 

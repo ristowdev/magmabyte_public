@@ -124,7 +124,8 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
 
         if(data?.component_key === 'formWithCustomInputs'){
             return {
-                form_title:data?.items[0]?.formWithCustomInputs?.form_title 
+                form_title:data?.items[0]?.formWithCustomInputs?.form_title,
+                call_to_action:data?.items[0]?.formWithCustomInputs?.call_to_action
             };
         };
     },[data]);
@@ -195,6 +196,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
             return (
                 yup.object({
                     form_title: yup.string().required('required'),
+                    call_to_action: yup.string().required('required'),
                 })
             );
         }; 
@@ -533,7 +535,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                     component_items:__component_items
                 });
 
-            }else{ 
+            }else{  
                 setOpenSnackErrorBar(true);
                 setSnackBarErrorMessage('The component must have at least one item!');
                 return 0;
@@ -589,10 +591,13 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
 
                     var _element = document.querySelector("input[name='items."+i+".field_label']");
                     const field_label = (_element as HTMLInputElement).value; 
-                    
+
                     var ___element = document.querySelector("input[name='items."+i+".field_required']");
                     const field_required = (___element as HTMLInputElement).checked; 
                     
+                    var _____element = document.querySelector("input[name='items."+i+".field_placeholder']");
+                    const field_placeholder = (_____element as HTMLInputElement).value; 
+
                     const sort_number = __formWithInputsInputs[i]['sortNumber'];
 
 
@@ -618,6 +623,7 @@ export default function EditPageComponent(props: IEditPageComponentProps) {
                         sort_number:sort_number,
                         field_type: field_type,
                         field_required: field_required,
+                        field_placeholder: field_placeholder
                     });
  
                 }

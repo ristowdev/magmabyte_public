@@ -32,10 +32,22 @@ function CreateArticlePage() {
 
     const handleSubmitForm = async ({ ...values }) => {
         if(articleContent){
+
+
+            var __element = document.querySelector("input[name='items.0.icon_name']");
+            const icon = (__element as HTMLInputElement).value;
+
+            if(icon.length<1){
+                setOpenSnackErrorBar(true);
+                setSnackBarErrorMessage(`Article dosen't have thumbnail. Upload thumbnail!`);
+                return 0;
+            }
+
             Object.assign(values, { 
                 article_visibility:selectPageVisibility.toLowerCase(),
                 article_content: articleContent,
-                article_status:_articleStatusRef.current
+                article_status:_articleStatusRef.current,
+                article_thumbnail: icon
             });
 
             addNewArticle(values)
@@ -63,7 +75,7 @@ function CreateArticlePage() {
                 schema={yup.object({
                     article_name: yup.string().required('required'),
                 })}
-                // ref={_pageStatusRef}
+                // ref={_pageStatusRef} 
                 >
                 <PageContentDefault
                     headerTitle={`Create new article`}

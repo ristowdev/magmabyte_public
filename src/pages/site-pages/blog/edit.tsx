@@ -65,11 +65,10 @@ function EditArticle() {
     }
     
     const initialValues = useMemo(() => {
-        // alert(data);
-   
+        // alert(data); 
         if(data){
             return {
-                article_name:data[0].article_name
+                article_name:data[0]?.article_name
             };
         };
     },[data]);
@@ -77,7 +76,7 @@ function EditArticle() {
     useEffect(()=>{
         if(data){
             setSelectPageVisibility(data[0]?.article_visibility);
-            setArticleContnet(data[0].article_content);
+            setArticleContnet(data[0]?.article_content);
         }
     },[data]);
     

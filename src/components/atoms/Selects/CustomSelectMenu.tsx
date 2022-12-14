@@ -15,6 +15,7 @@ interface ICustomeSelectMenuProps {
     placeholder?: string;
     options?: any;
     name?: string;
+    defaultValue?: string;
 }
 
 export default function CustomeSelectMenu(props: ICustomeSelectMenuProps) {
@@ -29,7 +30,8 @@ export default function CustomeSelectMenu(props: ICustomeSelectMenuProps) {
         type,
         placeholder,
         options,
-        name
+        name,
+        defaultValue
     } = props;
 
     console.log(options);
@@ -44,10 +46,11 @@ export default function CustomeSelectMenu(props: ICustomeSelectMenuProps) {
                 </label>
             ) : null}
             <InputContainer>
-                <select 
+                <select
                     className={className} 
                     onChange={selectChange}
                     name={name}
+                    defaultValue={defaultValue}
                 >
                     {options && options.map((_o:any)=> (
                         <option value={_o.key}>{_o.name}</option>
