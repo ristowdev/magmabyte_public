@@ -8,7 +8,7 @@ export const ContainerCenter = styled.div`
     height:100vh;
 `;
 
-export const Form = styled.form`
+export const Form = styled.div`
     display:flex;
     align-items:center;
     justify-content:center;

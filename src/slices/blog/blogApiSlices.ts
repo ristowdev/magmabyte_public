@@ -14,7 +14,7 @@ export const BlogApiSlices = apiBaseSlice.injectEndpoints({
 
     singleArticle: builder.query({
       query: (id) => ({
-        url: "/blog/article/"+id,
+        url: "/blog/article/byid/"+id,
         method: "GET",
       }),
     }),

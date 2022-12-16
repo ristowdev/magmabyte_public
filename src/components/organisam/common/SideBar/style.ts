@@ -49,6 +49,10 @@ export const InsideSideBar = styled.div`
 
 export const List = styled.div`  
     margin-top:3rem;
+
+    // height: 80vh;
+    // display: flex;
+    // flex-direction: column;
 `;
 
 

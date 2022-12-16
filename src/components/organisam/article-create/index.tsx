@@ -2,6 +2,7 @@ import React, { MouseEvent, ReactElement, SetStateAction, useEffect } from 'reac
 import DefaultFileUploader from '../../atoms/FileUploaders/DefaultFileUploader';
 import InstantFileUploader from '../../atoms/FileUploaders/InstantFileUploader';
 import InputWithMoreDetails2 from '../../atoms/Inputs/InputWithMoreDetails2';
+import CustomTextArea from '../../atoms/Textareas/CustomeTextArea';
 import DefaultTextEditor from '../../atoms/TextEditors/DefaultTextEditor';
  
 interface ICreateArticleProps {
@@ -27,9 +28,10 @@ export default function CreateArticle(props: ICreateArticleProps) {
                 labelText='Thumbnail'
                 name={`items.0.icon`}
                 __id={0}
-                defaultValue={editData&&editData?.longTextArea[0]?.thumbnail || ""}
+                defaultValue={editData&&editData[0]?.article_thumbnail || ""}
                 // defaultValue={data?.leftTextsRightImage}
             />
+            <br/>
             <InputWithMoreDetails2
                 name="article_name"
                 labelText="Article name"
@@ -38,7 +40,21 @@ export default function CreateArticle(props: ICreateArticleProps) {
                 type='text'
             />
 
-            <div style={{marginTop:'20px', marginBottom:'15px'}}>
+            <div style={{marginTop:'20px', marginBottom:'5px'}}>
+                <label className='input-label ' style={{marginBottom:'5px'}}>
+                    Article short description                            
+                </label>
+            </div>
+            
+            <CustomTextArea
+                className='text-area-edit'
+                name={`items.0.short_description`}
+                placeholder="Meet our team .. .. .."
+                defaultValue={editData&&editData[0]?.short_description || ""}
+                // defaultValue={component.description}
+            />
+
+            <div style={{marginTop:'25px', marginBottom:'15px'}}>
                 <label className='input-label ' style={{marginBottom:'5px'}}>
                     Article content                            
                 </label>

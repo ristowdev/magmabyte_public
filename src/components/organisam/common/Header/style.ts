@@ -24,8 +24,9 @@ export const LocationText = styled.span`
     
 `;
 
-export const Logout = styled.div`
+export const Logout = styled.a`
     align-items:center;
     display:flex;
+    cursor:pointer;
     
 `;

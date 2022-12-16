@@ -94,7 +94,7 @@ function CreateNewPagePage() {
     });
 
     
-
+ 
     const handleCreateNewPage = async ({ ...values }) => {
         if(returnedPageComponents?.length > 0){
             Object.assign(values, { 
@@ -256,7 +256,6 @@ function CreateNewPagePage() {
                 open={openSnackErrorBar}
                 onClose={setOpenSnackErrorBar}
                 errorMessage={snackBarErrorMessage}
-                
             />
        </>
     );

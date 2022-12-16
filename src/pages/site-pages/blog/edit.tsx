@@ -17,7 +17,7 @@ import DefaultMenu from '../../../components/atoms/Menus/DefaultMenu';
 import { useAddNewArticleMutation, useSingleArticleQuery, useUpdateArticleMutation } from '../../../slices/blog/blogApiSlices';
 import { useParams } from 'react-router-dom';
 import LinkButton from '../../../components/atoms/Buttons/LinkButton';
-
+    
 
 function EditArticle() {
 
@@ -43,11 +43,20 @@ function EditArticle() {
 
     const handleSubmitForm = async ({ ...values }) => {
         if(articleContent){
+            var __element = document.querySelector("input[name='items.0.icon_name']");
+            const icon = (__element as HTMLInputElement).value;
+
+            var _element = document.querySelector("textarea[name='items.0.short_description']");
+            const short_description = (_element as HTMLInputElement).value;
+
             Object.assign(values, { 
                 article_visibility:selectPageVisibility.toLowerCase(),
                 article_content: articleContent,
                 // article_status:_articleStatusRef.current,
-                article_id:data[0]._id
+                article_id:data[0]._id,
+                article_thumbnail: icon,
+                short_description: short_description
+                
             });
 
             updateArticle(values)

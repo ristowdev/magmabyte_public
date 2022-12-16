@@ -2,11 +2,26 @@ import React from "react";
 import { Container, LocationText, Logout, MainHeader, PageLocation } from "./style";
 import {AiOutlineHome,AiOutlinePoweroff} from 'react-icons/ai';
 import {MdKeyboardArrowRight} from 'react-icons/md';
+import { useAppDispatch } from "../../../../store/hook";
+import { setUser } from "../../../../slices/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 
 interface IHeaderProps {}
 
 const Header = ({}: IHeaderProps) => {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
+    const logoutHandle = (e:any) => { 
+        e.preventDefault(); 
+
+        localStorage.removeItem("token");
+        dispatch(setUser({ token: ""}));
+        navigate("/login");
+        
+    };
+
     return (
         <MainHeader>
             <Container> 
@@ -29,7 +44,7 @@ const Header = ({}: IHeaderProps) => {
 
                 </PageLocation>
 
-                <Logout>
+                <Logout onClick={(e)=>{logoutHandle(e)}}>
                     <LocationText
                         style={{marginRight:'10px'}}
                     >Log out</LocationText>
