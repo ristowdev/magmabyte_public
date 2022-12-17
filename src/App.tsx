@@ -17,12 +17,14 @@ import EditMenu from './pages/site-pages/menu/EditMenu';
 import EditSettings from './pages/site-pages/settings/EditSettings';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from './store/hook';
-import { setUser } from './slices/auth/authSlice';
+import { setUser } from './slices/auth/authSlice'; 
 // import Sidebar from './components/organisam/common/SideBar'; 
+ 
 
 function App() {
    const dispatch = useAppDispatch();
 
+   // const token = localStorage.getItem("token");
    // const [token, setToken] = useState<string>();
    const token = useSelector((state: any) => state.auth.token);
    // const token = localStorage.getItem("token");
@@ -45,9 +47,12 @@ function App() {
 
          <BrowserRouter>
             <Routes>
-              <Route path="/login" element={token ? <Navigate to="/pages"/> : <LoginForm/>} />
- 
-               <Route path="/" element={<Navigate to="/pages"/>} />
+               {token && <>
+               {/* <PrivateRoute path="/pages/home" element={<HomePage/>} /> */}
+               {/* <PrivateRoute path="/pages/home" element={<HomePage/>} /> */}
+               {/* <Route path="/pages" element={<ProtectedRoute outlet={<AllPages />} /> } /> */}
+
+               {/* <Route path="/" element={<Navigate to="/pages"/>} /> */}
                <Route path="/pages/home" element={token ? <HomePage/> :<Navigate to="/login"/>} />
                <Route path="/blog/articles" element={token ? <BlogPage/> :<Navigate to="/login"/>} />
                <Route path="/blog/create-article" element={token ? <ArticleCreatePage/> :<Navigate to="/login"/>} />
@@ -60,7 +65,8 @@ function App() {
                <Route path="/blog/article/:id" element={token ? <EditArticle /> :<Navigate to="/login"/>} />
                <Route path="/menu" element={token ? <EditMenu /> :<Navigate to="/login"/>} />
                <Route path="/settings" element={token ? <EditSettings /> :<Navigate to="/login"/>} />
-                 
+               </>}
+               <Route path="/login" element={token ? <Navigate to="/pages" /> : <LoginForm/> } />
             </Routes>
          </BrowserRouter>
      </>

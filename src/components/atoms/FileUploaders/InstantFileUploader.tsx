@@ -4,6 +4,7 @@ import { Form, Field } from 'react-final-form'
 import { Input } from './styles';
 import {AiOutlineQuestionCircle} from 'react-icons/ai';
 import { useUploadImageMutation } from '../../../slices/media/mediaApiSlices';
+import { IMAGE_URL } from '../../../consts';
 
 interface IFileUploaderProps {
     name: any;
@@ -122,7 +123,7 @@ export default function InstantFileUploader(props: IFileUploaderProps) {
                     >
                         {!image && defaultValue && (
                             <img 
-                                src={`http://localhost:8080/api/image/${defaultValue}`} 
+                                src={`${IMAGE_URL+defaultValue}`} 
                                 style={{
                                     width:'40px',
                                     height:'40px', 
@@ -134,7 +135,7 @@ export default function InstantFileUploader(props: IFileUploaderProps) {
                         )}
                         {image && (
                             <img 
-                                src={`http://localhost:8080/api/image/${image}`} 
+                                src={`${IMAGE_URL+image}`} 
                                 style={{
                                     width:'40px',
                                     height:'40px', 
