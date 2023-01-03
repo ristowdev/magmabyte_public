@@ -70,7 +70,7 @@ function CreateNewPagePage() {
             ];
 
             addNewPage(_arr)  
-                .unwrap()
+                .unwrap() 
                 .then(() => {
                 })
                 .then((error) => {

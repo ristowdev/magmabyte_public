@@ -6,7 +6,7 @@ export interface AuthState {
 
 const initialState: AuthState = { 
   token: null,
-};
+}; 
 
 export const authSlice = createSlice({
   name: "auth",
